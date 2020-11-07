@@ -24,7 +24,7 @@ int main(void)
     UART_Start();
     isr_BUTTON_StartEx(Custom_BUTTON_ISR);
     
-    CyDelay(5); //"The boot procedure is complete about 5 milliseconds after device power-up."
+    CyDelay(10); //"The boot procedure is complete about 5 milliseconds after device power-up."
     
     reg = LIS3DH_CTRL_REG1_INIT;
     I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS,
@@ -44,54 +44,55 @@ int main(void)
     EEPROM_Start();
     Change_DataRate(INITIALIZATION);
     
-    uint8_t data[6];
-    int16 dataX;
-    int16 dataY;
-    int16 dataZ;
     
-    float dataX_f;
-    float dataY_f;
-    float dataZ_f;
-    
-    
-    char string[100];
+    Buffer[0] = HEADER;
+    Buffer[TRANSMIT_BUFFER_SIZE-1] = TAIL;
     
     for(;;)
     {
         /* Place your application code here. */
         
         if (flag_button == 1){
-            Change_DataRate(UPDATING);
-            //UART_PutString("button pressed");
+            Change_DataRate(UPDATING); //occhio che mi va alto subito una volta 
             flag_button = 0;
-            UART_PutString("button pressed");
         }
         
         I2C_Peripheral_ReadRegister(LIS3DH_DEVICE_ADDRESS,
-                                STATUS_REG_AUX, 
-                                &reg);
+                                    STATUS_REG_AUX, 
+                                    &reg);
         
         if (reg & MASK_ADC_OVERRUN){
+        
             //campiona
             I2C_Peripheral_ReadRegisterMulti(LIS3DH_DEVICE_ADDRESS,
                                              OUT_ADC1_L,
                                              6,
                                              data);
             //trasformare in qualche modo
-            dataX = (int16)((data[0] | (data[1]<<8)))>>6;
-            dataY = (int16)((data[2] | (data[3]<<8)))>>6;
-            dataZ = (int16)((data[4] | (data[5]<<8)))>>6;
+            dataX = (int16)((data[0] | (data[1]<<8)))>>4;
+            dataY = (int16)((data[2] | (data[3]<<8)))>>4;
+            dataZ = (int16)((data[4] | (data[5]<<8)))>>4;
             
-            dataX_f  = (float) (dataX * M_DIGIT_TO_G + Q_DIGIT_TO_G);
-            dataY_f  = (float) (dataY * M_DIGIT_TO_G + Q_DIGIT_TO_G);
-            dataZ_f  = (float) (dataZ * M_DIGIT_TO_G + Q_DIGIT_TO_G);
+            DataUnion.f = (float)(dataX * M_DIGIT_TO_G - Q_DIGIT_TO_G);
+            Buffer[1] = (DataUnion.l & 0xFF000000) >> 24;
+            Buffer[2] = (DataUnion.l & 0x00FF0000) >> 16;
+            Buffer[3] = (DataUnion.l & 0x0000FF00) >> 8;
+            Buffer[4] = (DataUnion.l & 0x000000FF) >> 0;
             
-            sprintf(string, "%f%f%f", dataX_f, dataY_f, dataZ_f);
+            DataUnion.f = (float)(dataY * M_DIGIT_TO_G - Q_DIGIT_TO_G);
+            Buffer[5] = (DataUnion.l & 0xFF000000) >> 24;
+            Buffer[6] = (DataUnion.l & 0x00FF0000) >> 16;
+            Buffer[7] = (DataUnion.l & 0x0000FF00) >> 8;
+            Buffer[8] = (DataUnion.l & 0x000000FF) >> 0;
+            
+            DataUnion.f = (float)(dataZ * M_DIGIT_TO_G - Q_DIGIT_TO_G);
+            Buffer[9]  = (DataUnion.l & 0xFF000000) >> 24;
+            Buffer[10] = (DataUnion.l & 0x00FF0000) >> 16;
+            Buffer[11] = (DataUnion.l & 0x0000FF00) >> 8;
+            Buffer[12] = (DataUnion.l & 0x000000FF) >> 0;
             
             
-            //mandare alla uart in qualche modo
-            
-            //UART_PutString(string);
+            UART_PutArray(Buffer,TRANSMIT_BUFFER_SIZE);
         }
     }
 }

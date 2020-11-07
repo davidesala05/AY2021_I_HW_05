@@ -19,20 +19,24 @@
     #include "I2C_Interface.h"
     
     #define MASK_TO_ERASE 0b00001111
-    #define MIN_DATA_RATE 0b0001
-    #define MAX_DATA_RATE 0b0110
+    #define MIN_DATA_RATE 0b00000001
+    #define MAX_DATA_RATE 0b00000110
     
-    #define M_DIGIT_TO_G 4*9.80665/1023
-    #define Q_DIGIT_TO_G 2*9.80665
+    #define G 9.80665f
+    #define M_DIGIT_TO_G 4*G/4095
+    #define Q_DIGIT_TO_G 2*G
     
     #define INITIALIZATION 0
     #define UPDATING 1
+    
+    #define BUFFER_SIZE 4*3
+    #define TRANSMIT_BUFFER_SIZE 1+BUFFER_SIZE+1
     
     #define HEADER 0xA0
     #define TAIL 0xC0
     
     //EEPROM address
-    #define EEPROM_ADDRESS 0x40008000
+    #define EEPROM_ADDRESS 0x00
     //Device address
     #define LIS3DH_DEVICE_ADDRESS 0x18
     //CTRL_REG1
@@ -47,17 +51,27 @@
     //STATUS_REG_AUX
     #define STATUS_REG_AUX 0x07
     #define MASK_ADC_OVERRUN 0b10000000 //da verificare!!
-    
+    //OUT_ADC1_L starting point for the MultiRead
     #define OUT_ADC1_L 0x08
     
     extern uint8_t flag_button;
     extern uint8_t data_rate;
     extern uint8_t reg;
-    
-    
-    extern int16 DataOut;
+    extern uint8_t data[6];
+    extern int16 dataX;
+    extern int16 dataY;
+    extern int16 dataZ;
+
+    extern uint8_t Buffer[TRANSMIT_BUFFER_SIZE];
     
     void Change_DataRate(uint8_t phase);
+    
+    union FloatUnion {
+        
+        float f;
+        uint32_t l;
+    }DataUnion;
+
     
 #endif
 
