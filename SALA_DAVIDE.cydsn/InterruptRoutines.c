@@ -15,9 +15,6 @@
 CY_ISR(Custom_BUTTON_ISR){
 
     flag_button = 1;
-
-
-
 }
 
 /* [] END OF FILE */

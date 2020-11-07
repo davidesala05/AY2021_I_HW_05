@@ -14,7 +14,7 @@
 
 uint8_t flag_button = 0;
 uint8_t data_rate = 0;
-uint8_t ctrl_reg1 = 0;
+uint8_t reg = 0;
 
 void Change_DataRate(uint8_t phase){
 
@@ -41,13 +41,13 @@ void Change_DataRate(uint8_t phase){
     //read the old register now
     I2C_Peripheral_ReadRegister(LIS3DH_DEVICE_ADDRESS,
                                 LIS3DH_CTRL_REG1, 
-                                &ctrl_reg1);    
-    ctrl_reg1 &= MASK_TO_ERASE;
-    ctrl_reg1 |= data_rate<<4;
+                                &reg);    
+    reg &= MASK_TO_ERASE;
+    reg |= data_rate<<4;
     //write the new register now
     I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS,
                                  LIS3DH_CTRL_REG1,
-                                 ctrl_reg1);
+                                 reg);
     EEPROM_UpdateTemperature();
     EEPROM_WriteByte(data_rate,(uint16)(EEPROM_ADDRESS));
 }
