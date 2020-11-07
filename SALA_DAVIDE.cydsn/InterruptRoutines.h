@@ -14,7 +14,6 @@
     
     #define __INTERRUPT_ROUTINES_H_
     
-    #include "cytypes.h"
     #include "project.h"
     #include "Global.h"
     

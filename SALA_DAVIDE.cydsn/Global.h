@@ -22,6 +22,9 @@
     #define MIN_DATA_RATE 0b0001
     #define MAX_DATA_RATE 0b0110
     
+    #define M_DIGIT_TO_G 4*9.80665/1023
+    #define Q_DIGIT_TO_G 2*9.80665
+    
     #define INITIALIZATION 0
     #define UPDATING 1
     
