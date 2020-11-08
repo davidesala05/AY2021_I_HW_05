@@ -30,7 +30,7 @@ int main(void)
         UART_PutString("Error occurred during I2C comm\r\n");  
     }
     /*Initialization of the LIS3DH_CTRL_REG4 register*/
-    reg = LIS3DH_CTRL_REG4_HIGH_RESOLUTION;
+    reg = LIS3DH_CTRL_REG4_INIT;
     error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS,
                                          LIS3DH_CTRL_REG4,
                                          reg);
@@ -38,7 +38,7 @@ int main(void)
         UART_PutString("Error occurred during I2C comm\r\n");  
     }
     /*Initialization of the LIS3DH_TEMP_CFG_REG register*/
-    reg = LIS3DH_TEMP_CFG_REG_ADC_ENABLE;
+    reg = LIS3DH_TEMP_CFG_REG_INIT;
     error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS,
                                          LIS3DH_TEMP_CFG_REG,
                                          reg);

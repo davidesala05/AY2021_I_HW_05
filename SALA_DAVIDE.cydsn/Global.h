@@ -19,7 +19,7 @@
     #define MAX_DATA_RATE 0b00000110
     //Macro used for the conversion
     #define G 9.80665
-    #define SENSITIVITY 2
+    #define SENSITIVITY 2 //Because the FS is +-4g
     #define mg_TO_g 0.001
     //Phase used in the Change_DataRate function
     #define INITIALIZATION 0
@@ -45,10 +45,10 @@
     #define LIS3DH_CTRL_REG1_INIT 0b00000111
     //CTRL_REG4
     #define LIS3DH_CTRL_REG4 0x23
-    #define LIS3DH_CTRL_REG4_HIGH_RESOLUTION 0b00011000
+    #define LIS3DH_CTRL_REG4_INIT 0b00011000
     //TEMP_CFG_REG
     #define LIS3DH_TEMP_CFG_REG 0x1F 
-    #define LIS3DH_TEMP_CFG_REG_ADC_ENABLE 0b10000000
+    #define LIS3DH_TEMP_CFG_REG_INIT 0b10000000
     //STATUS_REG_AUX
     #define STATUS_REG 0x27
     #define MASK_ADC_OVERRUN 0b10000000
