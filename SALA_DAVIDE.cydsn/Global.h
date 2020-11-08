@@ -17,14 +17,15 @@
     #include "cytypes.h"
     #include "project.h"
     #include "I2C_Interface.h"
+    #include "stdio.h"
     
     #define MASK_TO_ERASE 0b00001111
     #define MIN_DATA_RATE 0b00000001
     #define MAX_DATA_RATE 0b00000110
     
-    #define G 9.80665f
-    #define M_DIGIT_TO_G 4*G/4095
-    #define Q_DIGIT_TO_G 2*G
+    #define G 9.80665
+    #define SENSITIVITY 2
+    #define mg_TO_g 0.001
     
     #define INITIALIZATION 0
     #define UPDATING 1
@@ -39,22 +40,26 @@
     #define EEPROM_ADDRESS 0x00
     //Device address
     #define LIS3DH_DEVICE_ADDRESS 0x18
+    //CTRL_REG0
+    #define LIS3DH_CTRL_REG0 0x1E
+    #define LIS3DH_CTRL_REG0_INIT 0b00010000
     //CTRL_REG1
     #define LIS3DH_CTRL_REG1 0x20
     #define LIS3DH_CTRL_REG1_INIT 0b00000111
     //CTRL_REG4
     #define LIS3DH_CTRL_REG4 0x23
-    #define LIS3DH_CTRL_REG4_HIGH_RESOLUTION 0b00001000
+    #define LIS3DH_CTRL_REG4_HIGH_RESOLUTION 0b00011000
     //TEMP_CFG_REG
     #define LIS3DH_TEMP_CFG_REG 0x1F 
     #define LIS3DH_TEMP_CFG_REG_ADC_ENABLE 0b10000000
     //STATUS_REG_AUX
-    #define STATUS_REG_AUX 0x07
-    #define MASK_ADC_OVERRUN 0b10000000 //da verificare!!
+    #define STATUS_REG 0x27
+    #define MASK_ADC_OVERRUN 0b10000000
     //OUT_ADC1_L starting point for the MultiRead
-    #define OUT_ADC1_L 0x08
+    #define OUT_X_L 0x28
     
     extern uint8_t flag_button;
+    extern uint8_t flag_initialization;
     extern uint8_t data_rate;
     extern uint8_t reg;
     extern uint8_t data[6];
@@ -68,10 +73,11 @@
     
     union FloatUnion {
         
-        float f;
+        float32 f;
         uint32_t l;
     }DataUnion;
 
+    //extern union FloatUnion DataUnion;
     
 #endif
 

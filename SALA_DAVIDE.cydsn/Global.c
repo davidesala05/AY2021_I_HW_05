@@ -13,6 +13,7 @@
 #include "Global.h"
 
 uint8_t flag_button = 0;
+uint8_t flag_initialization = 0;
 uint8_t data_rate = 0;
 uint8_t reg = 0;
 uint8_t data[6] = {0};
@@ -20,6 +21,7 @@ int16 dataX = 0;
 int16 dataY = 0;
 int16 dataZ = 0;
 uint8_t Buffer[TRANSMIT_BUFFER_SIZE] = {0};
+//union FloatUnion DataUnion = {0};
 
 void Change_DataRate(uint8_t phase){
 
@@ -29,6 +31,7 @@ void Change_DataRate(uint8_t phase){
     switch (phase){
         
         case INITIALIZATION : //In this case I don't want to increase the data_rate beacuse the initialization is required
+            flag_initialization = 1;    
             break;
         
         case UPDATING : //In this case the data_rate is increased or reset to the initial value

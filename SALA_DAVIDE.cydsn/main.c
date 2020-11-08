@@ -24,7 +24,7 @@ int main(void)
     UART_Start();
     isr_BUTTON_StartEx(Custom_BUTTON_ISR);
     
-    CyDelay(10); //"The boot procedure is complete about 5 milliseconds after device power-up."
+    CyDelay(5); //"The boot procedure is complete about 5 milliseconds after device power-up."
     
     reg = LIS3DH_CTRL_REG1_INIT;
     I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS,
@@ -53,19 +53,25 @@ int main(void)
         /* Place your application code here. */
         
         if (flag_button == 1){
-            Change_DataRate(UPDATING); //occhio che mi va alto subito una volta 
-            flag_button = 0;
+            if(flag_initialization == 1){
+                flag_initialization = 0;
+                flag_button = 0;
+            }
+            else {
+                Change_DataRate(UPDATING);
+                flag_button = 0;
+            }
         }
         
         I2C_Peripheral_ReadRegister(LIS3DH_DEVICE_ADDRESS,
-                                    STATUS_REG_AUX, 
+                                    STATUS_REG, 
                                     &reg);
         
         if (reg & MASK_ADC_OVERRUN){
         
             //campiona
             I2C_Peripheral_ReadRegisterMulti(LIS3DH_DEVICE_ADDRESS,
-                                             OUT_ADC1_L,
+                                             OUT_X_L,
                                              6,
                                              data);
             //trasformare in qualche modo
@@ -73,23 +79,42 @@ int main(void)
             dataY = (int16)((data[2] | (data[3]<<8)))>>4;
             dataZ = (int16)((data[4] | (data[5]<<8)))>>4;
             
-            DataUnion.f = (float)(dataX * M_DIGIT_TO_G - Q_DIGIT_TO_G);
-            Buffer[1] = (DataUnion.l & 0xFF000000) >> 24;
-            Buffer[2] = (DataUnion.l & 0x00FF0000) >> 16;
-            Buffer[3] = (DataUnion.l & 0x0000FF00) >> 8;
-            Buffer[4] = (DataUnion.l & 0x000000FF) >> 0;
             
-            DataUnion.f = (float)(dataY * M_DIGIT_TO_G - Q_DIGIT_TO_G);
-            Buffer[5] = (DataUnion.l & 0xFF000000) >> 24;
-            Buffer[6] = (DataUnion.l & 0x00FF0000) >> 16;
-            Buffer[7] = (DataUnion.l & 0x0000FF00) >> 8;
-            Buffer[8] = (DataUnion.l & 0x000000FF) >> 0;
+            /*DataUnion.f = (float32)(dataX)*mg_TO_g*G*SENSITIVITY;
+            Buffer[1] = (uint8_t)((DataUnion.l) >> 0 & 0xFF);
+            Buffer[2] = (uint8_t)((DataUnion.l) >> 8 & 0xFF);
+            Buffer[3] = (uint8_t)((DataUnion.l) >> 16 & 0xFF);
+            Buffer[4] = (uint8_t)((DataUnion.l) >> 24 & 0xFF);
             
-            DataUnion.f = (float)(dataZ * M_DIGIT_TO_G - Q_DIGIT_TO_G);
-            Buffer[9]  = (DataUnion.l & 0xFF000000) >> 24;
-            Buffer[10] = (DataUnion.l & 0x00FF0000) >> 16;
-            Buffer[11] = (DataUnion.l & 0x0000FF00) >> 8;
-            Buffer[12] = (DataUnion.l & 0x000000FF) >> 0;
+            DataUnion.f = (float32)(dataY)*mg_TO_g*G*SENSITIVITY;
+            Buffer[5] = (uint8_t)((DataUnion.l) >> 0 & 0xFF);
+            Buffer[6] = (uint8_t)((DataUnion.l) >> 8 & 0xFF);
+            Buffer[7] = (uint8_t)((DataUnion.l) >> 16 & 0xFF);
+            Buffer[8] = (uint8_t)((DataUnion.l) >> 24 & 0xFF);
+            
+            DataUnion.f = (float32)(dataZ)*mg_TO_g*G*SENSITIVITY;
+            Buffer[9] = (uint8_t)((DataUnion.l) >> 0 & 0xFF);
+            Buffer[10] = (uint8_t)((DataUnion.l) >> 8 & 0xFF);
+            Buffer[11] = (uint8_t)((DataUnion.l) >> 16 & 0xFF);
+            Buffer[12] = (uint8_t)((DataUnion.l) >> 24 & 0xFF);*/
+            
+            DataUnion.f = (float32)(dataX)*mg_TO_g*G*SENSITIVITY;
+            Buffer[1] = (uint8_t)((DataUnion.l & 0xFF000000) >> 24);
+            Buffer[2] = (uint8_t)((DataUnion.l & 0x00FF0000) >> 16);
+            Buffer[3] = (uint8_t)((DataUnion.l & 0x0000FF00) >> 8);
+            Buffer[4] = (uint8_t)((DataUnion.l & 0x000000FF) >> 0);
+            
+            DataUnion.f = (float32)(dataY)*mg_TO_g*G*SENSITIVITY;
+            Buffer[5] = (uint8_t)((DataUnion.l & 0xFF000000) >> 24);
+            Buffer[6] = (uint8_t)((DataUnion.l & 0x00FF0000) >> 16);
+            Buffer[7] = (uint8_t)((DataUnion.l & 0x0000FF00) >> 8);
+            Buffer[8] = (uint8_t)((DataUnion.l & 0x000000FF) >> 0);
+            
+            DataUnion.f = (float32)(dataZ)*mg_TO_g*G*SENSITIVITY;
+            Buffer[9]  = (uint8_t)((DataUnion.l & 0xFF000000) >> 24);
+            Buffer[10] = (uint8_t)((DataUnion.l & 0x00FF0000) >> 16);
+            Buffer[11] = (uint8_t)((DataUnion.l & 0x0000FF00) >> 8);
+            Buffer[12] = (uint8_t)((DataUnion.l & 0x000000FF) >> 0);
             
             
             UART_PutArray(Buffer,TRANSMIT_BUFFER_SIZE);
