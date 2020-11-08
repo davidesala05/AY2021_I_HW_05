@@ -1,17 +1,13 @@
 /* ========================================
  *
- * Copyright YOUR COMPANY, THE YEAR
- * All Rights Reserved
- * UNPUBLISHED, LICENSED SOFTWARE.
- *
- * CONFIDENTIAL AND PROPRIETARY INFORMATION
- * WHICH IS THE PROPERTY OF your company.
- *
+ * HEADER file where all the macros, global variables and function are declared
+ * 
  * ========================================
 */
 
 #include "Global.h"
 
+/*Below all the global variables are initialized to 0*/
 uint8_t flag_button = 0;
 uint8_t flag_initialization = 0;
 uint8_t data_rate = 0;
@@ -21,8 +17,8 @@ int16 dataX = 0;
 int16 dataY = 0;
 int16 dataZ = 0;
 uint8_t Buffer[TRANSMIT_BUFFER_SIZE] = {0};
-//union FloatUnion DataUnion = {0};
 
+/*Below the Change_DataRate function*/
 void Change_DataRate(uint8_t phase){
 
     //The value saved in the EEPROM is read
@@ -31,12 +27,12 @@ void Change_DataRate(uint8_t phase){
     switch (phase){
         
         case INITIALIZATION : //In this case I don't want to increase the data_rate beacuse the initialization is required
-            flag_initialization = 1;    
+            flag_initialization = 1; //This flag is used in the main to not increment the DATARATE at the POWER-ON of the system   
             break;
         
         case UPDATING : //In this case the data_rate is increased or reset to the initial value
-            if (data_rate == MAX_DATA_RATE){
-                data_rate = MIN_DATA_RATE;
+            if (data_rate == MAX_DATA_RATE){ //If the DATARATE is the MAX admissible
+                data_rate = MIN_DATA_RATE; //DATARATE reset to the starting value
             }
             else {
                 data_rate++;
@@ -48,10 +44,14 @@ void Change_DataRate(uint8_t phase){
     }
     
     //Read the old register
-    I2C_Peripheral_ReadRegister(LIS3DH_DEVICE_ADDRESS,
-                                LIS3DH_CTRL_REG1, 
-                                &reg);    
-    //The prior ODR[3:0] bits of the data rate are erased
+    ErrorCode error = I2C_Peripheral_ReadRegister(LIS3DH_DEVICE_ADDRESS,
+                                                  LIS3DH_CTRL_REG1, 
+                                                  &reg);
+    if(error == ERROR){
+        UART_PutString("Error occurred during I2C comm\r\n");  
+    }
+    
+    //The old ODR[3:0] bits of the data rate are erased
     reg &= MASK_TO_ERASE;
     //The new bits are saved
     reg |= (data_rate<<4); //The shift is necessary beacuse we have to modify the [7:4] bits
@@ -60,7 +60,7 @@ void Change_DataRate(uint8_t phase){
                                  LIS3DH_CTRL_REG1,
                                  reg);
     //New data rate is saved to the EEPROM
-    EEPROM_UpdateTemperature();
+    EEPROM_UpdateTemperature(); //Necessary before to write
     EEPROM_WriteByte(data_rate,EEPROM_ADDRESS);
 }
 

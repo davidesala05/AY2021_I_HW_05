@@ -1,12 +1,7 @@
 /* ========================================
  *
- * Copyright YOUR COMPANY, THE YEAR
- * All Rights Reserved
- * UNPUBLISHED, LICENSED SOFTWARE.
- *
- * CONFIDENTIAL AND PROPRIETARY INFORMATION
- * WHICH IS THE PROPERTY OF your company.
- *
+ * ISR of the BUTTON
+ * 
  * ========================================
 */
 
@@ -14,7 +9,7 @@
 
 CY_ISR(Custom_BUTTON_ISR){
 
-    flag_button = 1;
+    flag_button = 1; //Flag used in the main to call the funciton used to change the DATARATE
 }
 
 /* [] END OF FILE */
