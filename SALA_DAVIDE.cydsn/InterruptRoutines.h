@@ -1,6 +1,6 @@
 /* ========================================
  *
- * The header file where the isr of the BUTTOn is declared
+ * The header file where the isr of the BUTTON is declared
  * 
  * ========================================
 */

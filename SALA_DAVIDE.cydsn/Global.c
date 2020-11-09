@@ -8,14 +8,16 @@
 #include "Global.h"
 
 /*Below all the global variables are initialized to 0*/
-uint8_t flag_button = 0;
+uint8_t flag_button         = 0;
 uint8_t flag_initialization = 0;
-uint8_t data_rate = 0;
-uint8_t reg = 0;
-uint8_t data[6] = {0};
-int16 dataX = 0;
-int16 dataY = 0;
-int16 dataZ = 0;
+uint8_t data_rate           = 0;
+uint8_t reg                 = 0;
+uint8_t reg_STATUS_REG      = 0;
+int16   dataX               = 0;
+int16   dataY               = 0;
+int16   dataZ               = 0;
+
+uint8_t data[6]                      = {0};
 uint8_t Buffer[TRANSMIT_BUFFER_SIZE] = {0};
 
 

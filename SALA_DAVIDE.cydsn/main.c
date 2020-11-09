@@ -31,6 +31,8 @@ int main(void)
     Buffer[0] = HEADER;
     Buffer[TRANSMIT_BUFFER_SIZE-1] = TAIL;
     
+    ErrorCode error;
+    
     for(;;)
     {
         /******************************************/
@@ -60,9 +62,9 @@ int main(void)
         The STATUS_REG is read in order to control
         in an OVERRUN of both the registers occur
         */
-        ErrorCode error = I2C_Peripheral_ReadRegister(LIS3DH_DEVICE_ADDRESS,
+        error = I2C_Peripheral_ReadRegister(LIS3DH_DEVICE_ADDRESS,
                                             STATUS_REG, 
-                                            &reg);
+                                            &reg_STATUS_REG);
         if(error == ERROR){
             UART_PutString("Error occurred during I2C comm\r\n");  
         }
@@ -73,9 +75,10 @@ int main(void)
         
         /*
         Below there is the condition that is verified
-        at a DATARATE frequency
+        at a DATARATE frequency when the new data are
+        available
         */
-        if (reg & MASK_ADC_OVERRUN){
+        if (reg_STATUS_REG & MASK_DATA_AVAILABLE){
         
             /*
             The new data are read by the contiguous
@@ -87,8 +90,8 @@ int main(void)
                                                      data);
             if(error == ERROR){
                 UART_PutString("Error occurred during I2C comm\r\n");  
-            }
-            
+            }            
+
             /*
             Data are transformed in int16 and divided by the corresponding axes
             Each of the three data is expressed as two’s complement left-justified,
