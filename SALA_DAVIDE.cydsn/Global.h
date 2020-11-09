@@ -52,7 +52,13 @@
     //STATUS_REG_AUX
     #define STATUS_REG 0x27
     #define MASK_ADC_OVERRUN 0b10000000
-    //OUT_ADC1_L starting point for the MultiRead
+    
+    /*
+    OUT_X_L --> starting point for the MultiRead
+    In this case I'm reading the FIFO set in ByPass mode
+    This allows me to have just one level of the FIFO for each
+    of the channel; so, the FIFO has only one level
+    */
     #define OUT_X_L 0x28
     
     /*Below all the flags and variables are declared*/
@@ -68,11 +74,20 @@
 
     extern uint8_t Buffer[TRANSMIT_BUFFER_SIZE]; //The BUFFER used to send the values by UART
     
-    void Change_DataRate(uint8_t phase); //Function used to change or initialize the DATARATE
+    /*
+    Function called at the beginning of the main
+    and used to initialized all the registers
+    */
+    void Registers_Start(void);
     
-    /*Below the UNION used to store the values after the conversion in 32bit is declared
-      - DataUnion.f is used to stored the float32 value
-      - DataUnion.l is used to extract the byte to saved in Buffer[i]*/
+    /*Function used to change or initialize the DATARATE*/
+    void Change_DataRate(uint8_t phase);
+    
+    /*
+    Below the UNION used to store the values after the conversion in 32bit is declared
+    - DataUnion.f is used to stored the float32 value
+    - DataUnion.l is used to extract the byte to saved in Buffer[i]
+    */
     union FloatUnion {
         float32 f;
         uint32_t l;

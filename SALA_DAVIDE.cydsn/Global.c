@@ -18,6 +18,57 @@ int16 dataY = 0;
 int16 dataZ = 0;
 uint8_t Buffer[TRANSMIT_BUFFER_SIZE] = {0};
 
+
+/******************************************/
+/*        REGISTERS_START FUNCTION        */
+/******************************************/
+
+void Registers_Start(void){
+
+    /*        REGISTERS INITIALIZATION        */
+    
+    /*Initialization of the LIS3DH_CTRL_REG1 register*/
+    reg = LIS3DH_CTRL_REG1_INIT;
+    ErrorCode error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS,
+                                                   LIS3DH_CTRL_REG1,
+                                                   reg);
+    if(error == ERROR){
+        UART_PutString("Error occurred during I2C comm\r\n");  
+    }
+    /*Initialization of the LIS3DH_CTRL_REG4 register*/
+    reg = LIS3DH_CTRL_REG4_INIT;
+    error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS,
+                                         LIS3DH_CTRL_REG4,
+                                         reg);
+    if(error == ERROR){
+        UART_PutString("Error occurred during I2C comm\r\n");  
+    }
+    /*Initialization of the LIS3DH_TEMP_CFG_REG register*/
+    reg = LIS3DH_TEMP_CFG_REG_INIT;
+    error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS,
+                                         LIS3DH_TEMP_CFG_REG,
+                                         reg);
+    if(error == ERROR){
+        UART_PutString("Error occurred during I2C comm\r\n");  
+    }
+    
+    /*  DATARATE INITIALIZATION FROM EEPROM   */
+    
+    /*
+    Below the EEPROM is started and read in the INITIALIZATION mode
+    This allows to write the DATARATE that was previously present
+    All the task are performed by the Change_DataRate function which
+    is expressed in the Global.c file
+    */
+    
+    EEPROM_Start();
+    Change_DataRate(INITIALIZATION);
+}
+
+/******************************************/
+/*        CHANGE_DATARATE FUNCTION        */
+/******************************************/
+
 /*Below the Change_DataRate function*/
 void Change_DataRate(uint8_t phase){
 
@@ -60,7 +111,7 @@ void Change_DataRate(uint8_t phase){
                                  LIS3DH_CTRL_REG1,
                                  reg);
     //New data rate is saved to the EEPROM
-    EEPROM_UpdateTemperature(); //Necessary before to write
+    EEPROM_UpdateTemperature(); //Necessary before writing
     EEPROM_WriteByte(data_rate,EEPROM_ADDRESS);
 }
 
