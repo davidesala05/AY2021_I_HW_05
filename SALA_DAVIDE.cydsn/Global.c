@@ -71,7 +71,6 @@ void Registers_Start(void){
 /*        CHANGE_DATARATE FUNCTION        */
 /******************************************/
 
-/*Below the Change_DataRate function*/
 void Change_DataRate(uint8_t phase){
 
     //The value saved in the EEPROM is read
@@ -107,7 +106,7 @@ void Change_DataRate(uint8_t phase){
     //The old ODR[3:0] bits of the data rate are erased
     reg &= MASK_TO_ERASE;
     //The new bits are saved
-    reg |= (data_rate<<4); //The shift is necessary beacuse we have to modify the [7:4] bits
+    reg |= (data_rate<<4); //The shift is necessary because we have to modify the [7:4] bits
     //Write the new register
     I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS,
                                  LIS3DH_CTRL_REG1,

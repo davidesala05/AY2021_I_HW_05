@@ -59,19 +59,19 @@
     #define MASK_DATA_AVAILABLE      0b00001000
     
     /* OUT_X_L --> starting point for the MultiRead */
-    #define OUT_X_L 0x28
+    #define OUT_X_L                  0x28
     
     /*Below all the flags and variables are declared*/
     
-    extern uint8_t flag_button;//Used to take track of the pression of the BUTTON
-    extern uint8_t flag_initialization; //Used to not change the DATARATE at the POWER-ON of the system
-    extern uint8_t data_rate; //Used to increment and save the DATARATE
-    extern uint8_t reg; //Used to save the register to be READ or WRITE
-    extern uint8_t reg_STATUS_REG; //Used to save the STATUS_REG register in the main
-    extern uint8_t data[6]; //Used to save the acceleration values READ by the MULTIREAD
-    extern int16   dataX; //Used to store the X-axis acceleration in 16bit
-    extern int16   dataY; //Used to store the Y-axis acceleration in 16bit
-    extern int16   dataZ; //Used to store the Z-axis acceleration in 16bit
+    extern uint8_t flag_button;          //Used to take track of the pression of the BUTTON
+    extern uint8_t flag_initialization;  //Used to not change the DATARATE at the POWER-ON of the system
+    extern uint8_t data_rate;            //Used to increment and save the DATARATE
+    extern uint8_t reg;                  //Used to save the register to be READ or WRITE
+    extern uint8_t reg_STATUS_REG;       //Used to save the STATUS_REG register in the main
+    extern uint8_t data[6];              //Used to save the acceleration values READ by the MULTIREAD
+    extern int16   dataX;                //Used to store the X-axis acceleration in 16bit
+    extern int16   dataY;                //Used to store the Y-axis acceleration in 16bit
+    extern int16   dataZ;                //Used to store the Z-axis acceleration in 16bit
 
     extern uint8_t Buffer[TRANSMIT_BUFFER_SIZE]; //The BUFFER used to send the values by UART
     

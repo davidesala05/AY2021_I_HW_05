@@ -60,7 +60,7 @@ int main(void)
         
         /*
         The STATUS_REG is read in order to control
-        in an OVERRUN of both the registers occur
+        if a new set of data is available
         */
         error = I2C_Peripheral_ReadRegister(LIS3DH_DEVICE_ADDRESS,
                                             STATUS_REG, 
@@ -109,22 +109,28 @@ int main(void)
             
             The conversion in made by a sensitivity expressed in the datasheet,
             the gravity constant and the conversion from "millig" to "g"
+            After the conversion, the float32 variable are subdivided in
+            4 uint8_t variables of one byte each. This allows to send the floating
+            point variables all together thanks to a Buffer of 14 bytes (1+4*3+1)
             */
  
             //X-axis
             DataUnion.f = (float32)(dataX)*mg_TO_g*G*SENSITIVITY;
+            
             Buffer[1] = (uint8_t)((DataUnion.l & 0xFF000000) >> 24);
             Buffer[2] = (uint8_t)((DataUnion.l & 0x00FF0000) >> 16);
             Buffer[3] = (uint8_t)((DataUnion.l & 0x0000FF00) >> 8);
             Buffer[4] = (uint8_t)((DataUnion.l & 0x000000FF) >> 0);
             //X-axis
             DataUnion.f = (float32)(dataY)*mg_TO_g*G*SENSITIVITY;
+            
             Buffer[5] = (uint8_t)((DataUnion.l & 0xFF000000) >> 24);
             Buffer[6] = (uint8_t)((DataUnion.l & 0x00FF0000) >> 16);
             Buffer[7] = (uint8_t)((DataUnion.l & 0x0000FF00) >> 8);
             Buffer[8] = (uint8_t)((DataUnion.l & 0x000000FF) >> 0);
             //Z-axis
             DataUnion.f = (float32)(dataZ)*mg_TO_g*G*SENSITIVITY;
+            
             Buffer[9]  = (uint8_t)((DataUnion.l & 0xFF000000) >> 24);
             Buffer[10] = (uint8_t)((DataUnion.l & 0x00FF0000) >> 16);
             Buffer[11] = (uint8_t)((DataUnion.l & 0x0000FF00) >> 8);
