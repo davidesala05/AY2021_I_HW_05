@@ -19,7 +19,7 @@ int main(void)
     UART_Start();
     isr_BUTTON_StartEx(Custom_BUTTON_ISR);
     
-    CyDelay(5); //"The boot procedure is complete about 5 milliseconds after device power-up."
+    CyDelay(10); //"The boot procedure is complete about 5 milliseconds after device power-up."
     
     /*
     The function used to initialize all the registers
