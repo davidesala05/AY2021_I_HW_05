@@ -33,6 +33,8 @@ int main(void)
     
     ErrorCode error;
     
+    CyDelay(100);
+    
     for(;;)
     {
         /******************************************/
@@ -86,7 +88,7 @@ int main(void)
             */
             error = I2C_Peripheral_ReadRegisterMulti(LIS3DH_DEVICE_ADDRESS,
                                                      OUT_X_L,
-                                                     6,
+                                                     N_REG_ACC,
                                                      data);
             if(error == ERROR){
                 UART_PutString("Error occurred during I2C comm\r\n");  

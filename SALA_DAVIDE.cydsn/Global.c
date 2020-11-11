@@ -78,7 +78,7 @@ void Change_DataRate(uint8_t phase){
     
     switch (phase){
         
-        case INITIALIZATION : //In this case I don't want to increase the data_rate beacuse the initialization is required
+        case INITIALIZATION : //In this case I don't want to increase the data_rate because the initialization is required
             flag_initialization = 1; //This flag is used in the main to not increment the DATARATE at the POWER-ON of the system   
             break;
         
@@ -95,22 +95,17 @@ void Change_DataRate(uint8_t phase){
             break;    
     }
     
-    //Read the old register
-    ErrorCode error = I2C_Peripheral_ReadRegister(LIS3DH_DEVICE_ADDRESS,
-                                                  LIS3DH_CTRL_REG1, 
-                                                  &reg);
+    //Creation of the new register's mask
+    reg = LIS3DH_CTRL_REG1_INIT | (data_rate << 4); //The shift is necessary because we have to modify the [7:4] bits
+    
+    //Write the new register
+    ErrorCode error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS,
+                                 LIS3DH_CTRL_REG1,
+                                 reg);
     if(error == ERROR){
         UART_PutString("Error occurred during I2C comm\r\n");  
     }
     
-    //The old ODR[3:0] bits of the data rate are erased
-    reg &= MASK_TO_ERASE;
-    //The new bits are saved
-    reg |= (data_rate<<4); //The shift is necessary because we have to modify the [7:4] bits
-    //Write the new register
-    I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS,
-                                 LIS3DH_CTRL_REG1,
-                                 reg);
     //New data rate is saved to the EEPROM
     EEPROM_UpdateTemperature(); //Necessary before writing
     EEPROM_WriteByte(data_rate,EEPROM_ADDRESS);

@@ -13,8 +13,7 @@
     #include "project.h"
     #include "I2C_Interface.h"
     
-    //MASK and macro used in the Change_DataRate function
-    #define MASK_TO_ERASE 0b00001111
+    //MACRO used in the Change_DataRate function
     #define MIN_DATA_RATE 0b00000001
     #define MAX_DATA_RATE 0b00000110
     //Macro used for the conversion
@@ -30,6 +29,8 @@
     //TAIL and HEADER added to BUFFER
     #define HEADER 0xA0
     #define TAIL   0xC0
+    //Number of register for the acceleration to read
+    #define N_REG_ACC 6
     
     /*Below all the registers and MASKs used in the main*/
     
