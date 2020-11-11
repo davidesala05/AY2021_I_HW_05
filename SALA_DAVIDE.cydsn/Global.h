@@ -37,9 +37,6 @@
     #define EEPROM_ADDRESS           0x00
     //Device address
     #define LIS3DH_DEVICE_ADDRESS    0x18
-    //CTRL_REG0
-    #define LIS3DH_CTRL_REG0         0x1E
-    #define LIS3DH_CTRL_REG0_INIT    0b00010000
     //CTRL_REG1
     #define LIS3DH_CTRL_REG1         0x20
     #define LIS3DH_CTRL_REG1_INIT    0b00000111
