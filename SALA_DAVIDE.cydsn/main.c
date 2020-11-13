@@ -95,8 +95,8 @@ int main(void)
             }            
 
             /*
-            Data are transformed in int16 and divided by the corresponding axes
-            Each of the three data is expressed as two’s complement left-justified,
+            Data are transformed in int16 and divided by the corresponding axis
+            Each of the three data is expressed as two’s complement left-justified in 12 bit,
             so a shift by 4 bits is required
             */
             dataX = (int16)((data[0] | (data[1]<<8)))>>4;
@@ -104,7 +104,7 @@ int main(void)
             dataZ = (int16)((data[4] | (data[5]<<8)))>>4;
             
             /*
-            Below the Data is transformed in m/s2 and in float32
+            Below the Data is transformed in m/s^2 and in float32
             DataUnion is an UNION declared in the Glocal.h file
             - DataUnion.f is used to stored the float32 value
             - DataUnion.l is used to extract the byte to saved in Buffer[i]

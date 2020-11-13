@@ -1,6 +1,7 @@
 /* ========================================
  *
- * HEADER file where all the macros, global variables and function are declared
+ * SOURCE file where all the global variables are initialized
+ * and the functions are defined
  * 
  * ========================================
 */
